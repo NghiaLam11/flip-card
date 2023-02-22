@@ -1,0 +1,53 @@
+.level {
+  height: 100vh;
+  background-color: #041c32;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.skip {
+  color: #fffffe;
+  top: 50%;
+  right: 10%;
+  font-size: 1.5rem;
+  position: absolute;
+}
+.skip:hover {
+    color: rgb(250, 249, 247, 0.4);
+    cursor: pointer;
+}
+.greet {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 10px 0px #f7b633;
+  background-color: #041c32;
+}
+.title {
+  color: #f7b633;
+  top: 30%;
+  left: 30%;
+  font-size: 1.5rem;
+  position: absolute;
+}
+.img__greet {
+  top: 30%;
+  left: 40%;
+  position: absolute;
+  width: 20vw;
+}
+h1 {
+  font-size: 2rem;
+  color: #fdba00;
+}
+button {
+  font-size: 2rem;
+  padding: 20px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover {
+  color: #f7b633;
+}
