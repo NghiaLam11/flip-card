@@ -21,6 +21,39 @@
   width: 120px;
   height: 150px;
 }
+.btn-back {
+  padding: 2px 7px;
+  background-color: transparent;
+  transition: 2s linear;
+  position: fixed;
+  top: 5px;
+  left: 10px;
+  display: flex;
+}
+.btn-back:hover {
+  animation: aniBorder 1.5s linear infinite;
+}
+@keyframes aniBorder {
+  0% {
+    border-right: #fdba00 0.3px solid;
+  }
+  33% {
+    border-top: #fdba00 0.5px solid;
+  }
+  66% {
+    border-left: #fdba00 0.7px solid;
+  }
+  100% {
+    border-right: #fdba00 0.3px solid;
+    border-bottom: #fdba00 1px solid;
+    box-shadow: #fdba00 0 0 5px 0;
+  }
+}
+.btn-link-back {
+  color: black;
+  font-size: 1rem;
+  padding: 10px;
+}
 .front,
 .back {
   width: 100%;
@@ -33,9 +66,48 @@
 
 .front {
   background-color: blue;
+  transition: 1s ease-in;
+  animation: Flip-front 0.4s linear;
 }
+
 .back {
   background-color: rgb(48, 149, 236);
+  transition: 1s ease-in;
+  animation: Flip-back 0.4s linear;
+}
+
+.btn-win {
+  font-size: 0.8rem;
+  padding: 8px;
+  margin: 20px 5px 0px 5px;
+}
+
+.btn-link {
+  font-size: 0.8rem;
+  padding: 8px;
+  color: black;
+}
+
+@keyframes Flip-front {
+  from {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes Flip-back {
+  from {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(360deg);
+    opacity: 1;
+  }
 }
 .fruit-back {
   width: 40%;
@@ -49,4 +121,33 @@
 }
 .shuffle {
   display: none;
+}
+.win {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(4, 28, 50, 0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+.win-content {
+  background-color: aliceblue;
+  width: 30vw;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.text {
+  font-size: 2rem;
+}
+.top {
+  position: fixed;
+  top: 5px;
+  left: calc(50% - (137.66px / 2));
 }

@@ -1,16 +1,22 @@
 import React, { useState, useEffect, useRef, memo } from "react";
 
-const Timer = () => {
-  const [delay, setDelay] = useState(300);
+const Timer = (props) => {
+  const [delay, setDelay] = useState(60);
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("level")) === "easy") {
-      setDelay(300);
+      setDelay(60);
     } else if (JSON.parse(localStorage.getItem("level")) === "medium") {
-      setDelay(420);
+      setDelay(120);
     } else if (JSON.parse(localStorage.getItem("level")) === "hard") {
-      setDelay(540);
+      setDelay(180);
     }
   }, []);
+
+  useEffect(() => {
+    if (props.time !== 0) {
+      setDelay(props.time.count);
+    }
+  }, [props.time]);
 
   const minutes = Math.floor(delay / 60);
 
@@ -24,14 +30,19 @@ const Timer = () => {
     if (delay === 0) {
       clearInterval(timer);
       timeCount.current.style.display = "none";
+      timeLeft.current.style.color = "red";
+      timeLeft.current.style.display = "inline";
+    } else {
+      timeCount.current.style.display = "inline";
+      timeLeft.current.style.display = "none";
     }
-
     return () => {
       clearInterval(timer);
     };
   });
 
   const timeCount = useRef();
+  const timeLeft = useRef();
   useEffect(() => {
     localStorage.setItem("time", JSON.stringify(`${minutes}:${seconds}`));
     if (seconds < 30 && minutes < 1) {
@@ -43,9 +54,14 @@ const Timer = () => {
 
   return (
     <>
-      <span style={{ fontSize: "2rem" }} ref={timeCount}>
-        {minutes}:{seconds}
-      </span>
+      <div>
+        <span style={{ fontSize: "2rem" }} ref={timeCount}>
+          TIME {minutes}:{seconds}
+        </span>
+        <span style={{ fontSize: "2rem", display: "none" }} ref={timeLeft}>
+          TIME LEFT!
+        </span>
+      </div>
     </>
   );
 };
