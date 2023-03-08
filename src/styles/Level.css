@@ -24,6 +24,7 @@
   right: 0;
   box-shadow: 0 0 10px 0px #f7b633;
   background-color: #041c32;
+  display: none;
 }
 .title {
   color: #f7b633;
@@ -47,6 +48,7 @@ button {
   padding: 20px 20px;
   border-radius: 5px;
   cursor: pointer;
+  margin: 0.3rem;
 }
 button:hover {
   color: #f7b633;

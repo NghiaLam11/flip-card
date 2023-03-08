@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/Cards.css";
 import Timer from "../components/Timer";
+import Boards from "../components/Board";
 import { Outlet, Link } from "react-router-dom";
+import { db } from "../firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 function Cards(props) {
   const [fruits, setFruits] = useState([]);
   function shuffle(arra1) {
@@ -21,6 +24,7 @@ function Cards(props) {
     }
     return arra1;
   }
+  const card = useRef();
   // SHUFFLE ARRAY OF FRUITS
   useEffect(() => {
     setFruits([]);
@@ -38,29 +42,33 @@ function Cards(props) {
   const [hasWin, setHasWin] = useState(false);
   const win = useRef();
   let [map, setMap] = useState([]);
-  let [name, setName] = useState([]);
+  let [timeString, setTimeString] = useState([]);
+  let [timeSecond, setTimeSecond] = useState([]);
+
   const cardSelected = async (fruit, index) => {
+    // PLAY AUDIO
+    const myAudioElement = new Audio(
+      "https://firebasestorage.googleapis.com/v0/b/flip-card-906d6.appspot.com/o/Drip-sound-effect-www_tiengdong_com.mp3?alt=media&token=4e6e4beb-0e26-4e11-beab-e47e41809f56"
+    );
+    myAudioElement.play();
+    // REFLIP CARD
+
     if (map.length === 2 && map[0].fruitCards.name !== map[1].fruitCards.name) {
       fruits[map[0].index] = { ...map[0].fruitCards, isFlip: false };
       fruits[map[1].index] = { ...map[1].fruitCards, isFlip: false };
       setFruits(fruits);
       setMap([]);
     }
-    console.log(fruits);
-    console.log(map, "Mapp");
     setMap((prev) => [
       ...prev,
       { fruitCards: { ...fruit, isFlip: true }, index: index },
     ]);
-    console.log(map);
     if (map.length === 1) {
-      console.log("FULL");
       if (map[0].fruitCards.name === fruit.name) {
         fruits[map[0].index] = map[0].fruitCards;
         fruits[index] = { ...fruit, isFlip: true };
         setFruits(fruits);
         setMap([]);
-        // setName(prev => [...prev, map[0].name])
       }
       //CHECK WIN AND LOSE
       const isWinner = fruits.every((fruit) => {
@@ -81,71 +89,11 @@ function Cards(props) {
         win.current.style.display = "flex";
       } else if (isWinner === true) {
         setHasWin(true);
+        setTimeString(JSON.parse(localStorage.getItem("time")));
+        setTimeSecond(JSON.parse(localStorage.getItem("timeSecond")));
         win.current.style.display = "flex";
       }
     }
-    // console.log(map[0], "MAPpppp");
-    // //FLIP
-    // fruits[index] = { ...fruit, isFlip: true };
-    // setFruits(fruits);
-    // if (map.length < 1) {
-    //   console.log(map[0], "MAP < 1");
-    //   setMap([]);
-    //   //PUSH TO CHECK THE NEXT CARD
-    //   console.log("LESS THAN 1 CARD");
-    //   setMap([{ fruitMap: fruit, index: index }]);
-    //   console.log(map[0], "MAP < 11");
-    // } else if (map.length >= 1) {
-    //   console.log(map[0], "MAP > 1");
-    //   console.log("MORE THAN 1 CARD");
-    //   // AFTER PUSH, CHECK PREVIOUS CARD EQUAL OR NOT EQUAL PRESENT CARD
-    //   if (map[0].fruitMap.name !== fruit.name) {
-    //     fruits[index] = { ...fruit, isFlip: false };
-    //     fruits[map[0].index] = { ...map[0].fruitMap, isFlip: false };
-    //     setFruits(fruits);
-    //     setMap([{ fruitMap: fruit, index: index }]);
-    //     console.log('NOT EQUAL')
-    //   } else if (map[0].fruitMap.name === fruit.name) {
-    //     fruits[index] = { ...fruit, isFlip: true };
-    //     fruits[map[0].index] = { ...map[0].fruitMap, isFlip: true };
-    //     setFruits(fruits);
-    //     console.log('EQUAL')
-    //   }
-    //   //CHECK WIN AND LOSE
-    //   const isWinner = fruits.every((fruit) => {
-    //     return fruit.isFlip !== false;
-    //   });
-    //   console.log(JSON.parse(localStorage.getItem("time")));
-    //   if (
-    //     (isWinner !== true) &
-    //     (JSON.parse(localStorage.getItem("time")) === "0:0")
-    //   ) {
-    //     setHasWin(false);
-    //     win.current.style.display = "flex";
-    //   } else if (
-    //     (isWinner === true) &
-    //     (JSON.parse(localStorage.getItem("time")) === "0:0")
-    //   ) {
-    //     setHasWin(false);
-    //     win.current.style.display = "flex";
-    //   } else if (isWinner === true) {
-    //     setHasWin(true);
-    //     win.current.style.display = "flex";
-    //   }
-    //   // SET EMPTY WHEN FLIPPED TWO CARDS
-    //   //  if (
-    //   //     map[0].fruitMap.name !== fruit.name &&
-    //   //     fruits[index].isFlip === true
-    //   //   ) {
-    //   //     setTimeout(()  => {
-    //   //       console.log(fruits, map[0]);
-    //   // fruits[index] = { ...fruit, isFlip: false };
-    //   // fruits[map[0].index] = { ...map[0].fruitMap, isFlip: false };
-    //   // setFruits(fruits);
-    //   //   }, 500);
-    //   // }
-    //   console.log(map, "MAP");
-    // }
   };
   const [time, setTime] = useState(0);
   const replay = () => {
@@ -158,15 +106,80 @@ function Cards(props) {
     }
     win.current.style.display = "none";
     if (JSON.parse(localStorage.getItem("level")) === "easy") {
-      setTime({ count: 180 });
+      setTime({ count: 60 });
     } else if (JSON.parse(localStorage.getItem("level")) === "medium") {
-      setTime({ count: 240 });
+      setTime({ count: 120 });
     } else if (JSON.parse(localStorage.getItem("level")) === "hard") {
-      setTime({ count: 300 });
+      setTime({ count: 180 });
+    }
+  };
+  // SAVE POINT
+  const [name, setName] = useState("");
+  const handleChange = (e) => {
+    setName(e.target.value);
+  };
+  const ShowPoint = (level) => {
+    if (name !== "") {
+      console.log("WINNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN", {
+        name,
+        timeString,
+        timeSecond,
+      });
+      addDoc(collection(db, `board-${level}`), {
+        name,
+        timeString,
+        timeSecond,
+      })
+        .then((docRef) => {
+          console.log(
+            "A New Document Field has been added to an existing document"
+          );
+          setName("");
+          win.current.style.display = "none";
+          replay();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      replay();
     }
   };
 
-  console.log("Re-rendering");
+  const [board, setBoard] = useState([]);
+  useEffect(() => {
+    const fruitsRef = collection(
+      db,
+      `board-${JSON.parse(localStorage.getItem("level"))}`
+    );
+
+    getDocs(fruitsRef).then((res) => {
+      res.docs.forEach((doc) =>
+        setBoard((prev) => [
+          ...prev,
+          {
+            ...doc.data(),
+            id: doc.id,
+          },
+        ])
+      );
+    });
+  }, []);
+  const displayBoard = useRef();
+  const showBoard = (level) => {
+    displayBoard.current.style.left = "calc(50% - (255px /2 ))";
+  };
+
+  const hideBoard = (level) => {
+    displayBoard.current.style.left = -100 + "%";
+  };
+
+  console.log(
+    "Re-rendering",
+    board.sort(function (a, b) {
+      return a - b;
+    })
+  );
   return (
     <>
       <div className="cards">
@@ -174,8 +187,27 @@ function Cards(props) {
           {hasWin === true ? (
             <div className="win-content">
               <div className="text">YOU WIN!</div>
-              <div className="win-time">
-                TIME: {JSON.parse(localStorage.getItem("time"))}
+              <input
+                placeholder="What's your name?"
+                type="text"
+                value={name}
+                onChange={handleChange}
+              />
+              <div className="win-time">TIME: {timeString}</div>
+              <div>
+                <button onClick={() => display()} className="btn-win">
+                  <Link className="btn-link" to="/">
+                    BACK
+                  </Link>
+                </button>
+                <button
+                  className="btn-win"
+                  onClick={() =>
+                    ShowPoint(JSON.parse(localStorage.getItem("level")))
+                  }
+                >
+                  ShowPoint
+                </button>
               </div>
             </div>
           ) : (
@@ -201,6 +233,20 @@ function Cards(props) {
               {"< "}BACK
             </Link>
           </button>
+          <button
+            onClick={() => showBoard(JSON.parse(localStorage.getItem("level")))}
+            className="btn__board"
+          >
+            Board
+          </button>
+          <div ref={displayBoard} className="board-fixed">
+            <Boards
+              hideBoard={hideBoard}
+              boards={board.sort(function (a, b) {
+                return b.timeSecond - a.timeSecond;
+              })}
+            />
+          </div>
           <div className="top">
             <div>
               <Timer time={time} />
@@ -209,7 +255,15 @@ function Cards(props) {
           <h1>PLAYING...</h1>
           <div className="fruits">
             {fruits.map((fruit, index) => (
-              <div className="card" key={fruit.id}>
+              <div
+                ref={card}
+                className={
+                  JSON.parse(localStorage.getItem("level")) === "hard"
+                    ? "card-hard"
+                    : "card"
+                }
+                key={fruit.id}
+              >
                 {index === map[0]?.index ||
                 index === map[1]?.index ||
                 fruit.isFlip === true ? (

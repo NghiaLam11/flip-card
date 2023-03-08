@@ -1,0 +1,20 @@
+.board{
+    padding: 2rem;
+}
+.rank{
+    text-align: left;
+    height: 200px;
+    overflow-y: scroll;
+    padding: 1rem;
+}
+.btn__hide{
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+}
+ .rank__number {
+    color: red;
+    font-size: 1.5rem;
+}
+.rank__name{
+    font-size: 1.3rem;
+}

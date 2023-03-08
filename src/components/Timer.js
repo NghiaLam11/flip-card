@@ -11,7 +11,6 @@ const Timer = (props) => {
       setDelay(180);
     }
   }, []);
-
   useEffect(() => {
     if (props.time !== 0) {
       setDelay(props.time.count);
@@ -40,18 +39,18 @@ const Timer = (props) => {
       clearInterval(timer);
     };
   });
-
+console.log()
   const timeCount = useRef();
   const timeLeft = useRef();
   useEffect(() => {
     localStorage.setItem("time", JSON.stringify(`${minutes}:${seconds}`));
+    localStorage.setItem("timeSecond", JSON.stringify(delay));
     if (seconds < 30 && minutes < 1) {
       timeCount.current.style.color = "red";
     } else {
       timeCount.current.style.color = "yellow";
     }
   }, [seconds, minutes]);
-
   return (
     <>
       <div>

@@ -8,7 +8,7 @@ import Cards from "./pages/Cards";
 function App() {
   const [cards, setCards] = useState([]);
   // SET LEVEL
-  const [level, setLevel] = useState(JSON.parse(localStorage.getItem("level")));
+  const [level, setLevel] = useState(JSON.parse(localStorage.getItem("level")) === null ? 'easy' : JSON.parse(localStorage.getItem("level")));
   // IF LEVEL IS EMPTY => SET LEVEL IS EASY LEVEL
   if (!JSON.parse(localStorage.getItem("level"))) {
     localStorage.setItem("level", JSON.stringify("easy"));
@@ -40,7 +40,6 @@ function App() {
       load.current.style.display = "none";
     });
   }, [level]);
-  console.log("kkk", cards);
   return (
     <div className="App">
       <div ref={load} className="load">

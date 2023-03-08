@@ -1,7 +1,5 @@
 .cards {
-  height: 100vh;
-  background-color: #041c32;
-  width: 100vw;
+  margin-top: 35rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +9,7 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  width: 70vw;
+  width: 80vw;
 }
 .card {
   position: relative;
@@ -20,6 +18,32 @@
   overflow: hidden;
   width: 120px;
   height: 150px;
+}
+@media (max-width: 1084px) {
+  .card {
+    width: 110px;
+    height: 130px;
+  }
+  .fruits{
+    width: 95vw;
+  }
+}
+@media (max-width: 610px) {
+  .card {
+    width: 80px;
+    height: 100px;
+  }
+  .fruits{
+    width: 95vw;
+  }
+}
+.card-hard {
+  position: relative;
+  margin: 3px;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 100px;
+  height: 120px;
 }
 .btn-back {
   padding: 2px 7px;
@@ -149,5 +173,35 @@
 .top {
   position: fixed;
   top: 5px;
-  left: calc(50% - (137.66px / 2));
+  left: calc(50% - (151.71px / 2));
+}
+.btn__board{
+  position: fixed;
+  top: 0.8%;
+  left: 10%;
+  padding: 0.55rem 1rem;
+  font-size: 1.4rem;
+  background-color: transparent;
+
+}
+.btn__board:hover{
+  border: 2px solid #fdba00;
+}
+.board-fixed {
+  position: fixed;
+  left: -100%;
+  top: 30%;
+  background-color: white;
+  z-index: 9999;
+  border-radius: 5px;
+}
+@media screen and (max-width: 768px) {
+  .btn__board{
+    position: fixed;
+    top: 15%;
+    left: 1.5%;
+    font-size: 1rem;
+    padding: 0.7rem 1.5rem;
+    background-color: transparent;
+  }
 }
